@@ -106,7 +106,7 @@ function rotateTetrimino(tetrimino: Tetrimino, clockwise: boolean): Tetrimino {
   } else {
     yy.reverse();
   }
-  newTetrimino.mino = xx.map(x => yy.map(y => newTetrimino.mino[Number(x)][Number(y)]));
+  newTetrimino.mino = yy.map(y => xx.map(x => newTetrimino.mino[Number(x)][Number(y)]));
   return newTetrimino;
 }
 
@@ -141,6 +141,14 @@ function shuffle(arr: any) {
 }
 
 function conflictTetrimino(gamePanel: GamePanel, tetrimino: Tetrimino): boolean {
+  const x = tetrimino.p.x;
+  const y = tetrimino.p.y;
+  if (x < 0
+    || GAME_PANEL_WIDTH < (x + tetrimino.mino[0].length)
+    || GAME_PANEL_HEIGHT < (y + tetrimino.mino.length)) {
+    // 画面外の場合（上はテトリミノの生成位置のため除外）
+    return true;
+  }
   return false;
 }
 
@@ -242,6 +250,14 @@ function App() {
     if (key === 'ArrowRight') {
       enableKeys = true;
       nextTetrimino = rightTetrimino(currentTetrimino.current);
+    }
+    if (key === 'KeyZ') {
+      enableKeys = true;
+      nextTetrimino = rotateTetrimino(currentTetrimino.current, true);
+    }
+    if (key === 'KeyX') {
+      enableKeys = true;
+      nextTetrimino = rotateTetrimino(currentTetrimino.current, false);
     }
     if (key === 'Space') {
       enableKeys = true;
